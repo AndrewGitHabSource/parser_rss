@@ -8,7 +8,7 @@ trait Searchable {
     private $searchWhere = false;
     private $searchWhereArray = null;
 
-    public function fullSearch(string $searchValue, array $columns, $model, array $with = null): Collection {
+    public function fullSearch(string $searchValue, array $columns, string $model, array $with = null): Collection {
         if ($with) {
             $query = $model::query()->with($with);
         }

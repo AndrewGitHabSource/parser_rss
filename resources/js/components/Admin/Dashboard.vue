@@ -38,84 +38,84 @@
                     </template>
                 </el-table-column>
             </el-table>
-{{search}}
+
             <el-pagination @current-change="currentChange" small background layout="prev, pager, next" :total="50" class="mt-4"/>
         </div>
     </div>
 </template>
 
 <script>
-import { inject, reactive, computed, onMounted, ref, watch } from "vue";
-import { getAllPosts } from '../../endpoints.js';
-import { filterPost } from '../../endpoints.js';
-import { searchPost } from '../../endpoints.js';
+    import { inject, reactive, computed, onMounted, ref, watch } from "vue";
+    import { getAllPosts } from '../../endpoints.js';
+    import { filterPost } from '../../endpoints.js';
+    import { searchPost } from '../../endpoints.js';
 
-export default {
-     setup() {
-        const isLoading = ref(true);
-        let search = ref("");
-        let form = reactive({
-            "author": "",
-            "title": "",
-            "description": "",
-        });
-        let posts = reactive({"key": null});
-        let currentPage = ref(1);
+    export default {
+         setup() {
+            let router = inject("router");
+            const isLoading = ref(true);
+            let search = ref("");
+            let form = reactive({
+                "author": "",
+                "title": "",
+                "description": "",
+            });
+            let posts = reactive({"key": null});
+            let currentPage = ref(1);
 
-         const getPosts = async () => {
-            isLoading.value = true;
+            const getPosts = async () => {
+                isLoading.value = true;
 
-            try {
+                try {
+                    let {data} = await getAllPosts(currentPage.value);
+                    posts.key = data;
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    isLoading.value = false;
+                }
+            }
+
+            watch(() => _.cloneDeep(form), async () => {
+                  let {data} = await filterPost(form);
+                  posts.key = data;
+               }
+            );
+
+            watch(search, async () => {
+                let {data} = await searchPost(search.value);
+                posts.key = data;
+            });
+
+            const currentChange = async (value) => {
+                currentPage.value = value;
+
                 let {data} = await getAllPosts(currentPage.value);
                 posts.key = data;
-            } catch (error) {
-                console.log(error);
-            } finally {
-                isLoading.value = false;
+            }
+
+            const edit = (index, {id}) => {
+                router.push('/edit-post');
+            }
+
+            const drop = () => {
+
+            }
+
+            onMounted(getPosts);
+
+            return {
+                posts,
+                isLoading,
+                search,
+                edit,
+                drop,
+                currentChange,
+                currentPage,
+                form,
             }
         }
-
-        watch(() => _.cloneDeep(form), async (currentValue, oldValue) => {
-              let {data} = await filterPost(form);
-              posts.key = data;
-           }
-        );
-
-        watch(search, async (selection, prevSelection) => {
-            console.log(search.value);
-            let {data} = await searchPost(search.value);
-            posts.key = data;
-        });
-
-        const currentChange = async (value) => {
-            currentPage.value = value;
-
-            let {data} = await getAllPosts(currentPage.value);
-            posts.key = data;
-        }
-
-        const edit = (index, {id}) => {
-
-        }
-
-        const drop = () => {
-
-        }
-
-        onMounted(getPosts);
-
-        return {
-            posts,
-            isLoading,
-            search,
-            edit,
-            drop,
-            currentChange,
-            currentPage,
-            form,
-        }
     }
-}
 </script>
 
 <style scoped>

@@ -18,7 +18,7 @@ class PostsFilter extends QueryFilter
 
     public function author(string $author)
     {
-        $this->builder->where('author', 'like', ''%'' . strtolower($author) . '%');
+        $this->builder->where('author', 'like', '%' . strtolower($author) . '%');
     }
 
 }

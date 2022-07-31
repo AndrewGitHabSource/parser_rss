@@ -1,6 +1,7 @@
 import Home from './components/Front/Home.vue';
 import Register from './components/Front/Login.vue';
 import Dashboard from './components/Admin/Dashboard.vue';
+import EditPost from './components/Admin/EditPost.vue';
 
 export const routes = [
     {
@@ -18,7 +19,15 @@ export const routes = [
         path: '/dashboard',
         component: Dashboard,
         meta: {
-            auth: true
+            auth: true,
+        },
+    },
+    {
+        name: 'editPost',
+        path: '/edit-post',
+        component: EditPost,
+        meta: {
+            auth: true,
         },
     },
 ];

@@ -52,6 +52,7 @@ vue.use(store);
 vue.use(auth);
 vue.use(ZiggyVue, Ziggy);
 vue.use(VueLodash, {name: 'custom'});
+vue.provide('router', router);
 vue.provide('store', store);
 vue.provide('auth', auth);
 vue.provide('lodash', VueLodash);
