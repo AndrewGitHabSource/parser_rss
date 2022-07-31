@@ -17,7 +17,6 @@ import { inject } from "vue";
 import { computed } from "vue";
 import { onMounted } from "vue";
 
-
 export default {
     setup() {
         let store = inject("store");
