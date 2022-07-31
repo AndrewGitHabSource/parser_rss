@@ -24,7 +24,7 @@ export const routes = [
     },
     {
         name: 'editPost',
-        path: '/edit-post',
+        path: '/admin/edit-post/:id',
         component: EditPost,
         meta: {
             auth: true,

@@ -32,7 +32,7 @@
                     </template>
 
                     <template #default="scope">
-                        <el-button size="small" @click="edit(scope.$index, scope.row)">Edit</el-button>
+                        <el-button size="small" @click="edit(scope.row)">Edit</el-button>
 
                         <el-button size="small" type="danger" @click="drop(scope.$index, scope.row)">Delete</el-button>
                     </template>
@@ -94,8 +94,8 @@
                 posts.key = data;
             }
 
-            const edit = (index, {id}) => {
-                router.push('/edit-post');
+            const edit = ({id}) => {
+                router.push({name: 'editPost', params: { id } });
             }
 
             const drop = () => {
