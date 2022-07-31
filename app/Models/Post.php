@@ -19,8 +19,7 @@ class Post extends Model
         'link',
     ];
 
-    public function scopeFilter(Builder $builder, QueryFilter $filter)
-    {
+    public function scopeFilter(Builder $builder, QueryFilter $filter) {
         $filter->apply($builder);
     }
 }

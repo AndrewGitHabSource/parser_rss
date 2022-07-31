@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Filters\PostsFilter;
+use App\Traits\Searchable;
 
 class PostController extends Controller
 {
+    use Searchable;
+
     public function index(Request $request): JsonResponse {
         $limit = 5;
 
@@ -26,6 +29,6 @@ class PostController extends Controller
     }
 
     public function search(Request $request): JsonResponse {
-
+        return response()->json($this->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post'));
     }
 }

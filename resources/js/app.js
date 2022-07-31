@@ -21,8 +21,6 @@ window.route = route;
 window.Ziggy = Ziggy;
 window._ = require('lodash');
 
-console.log(localStorage.auth_token_default);
-
 const router = VueRouter.createRouter({
     mode: "history",
     history: VueRouter.createWebHistory(),

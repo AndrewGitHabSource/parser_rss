@@ -38,7 +38,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-
+{{search}}
             <el-pagination @current-change="currentChange" small background layout="prev, pager, next" :total="50" class="mt-4"/>
         </div>
     </div>
@@ -48,11 +48,12 @@
 import { inject, reactive, computed, onMounted, ref, watch } from "vue";
 import { getAllPosts } from '../../endpoints.js';
 import { filterPost } from '../../endpoints.js';
+import { searchPost } from '../../endpoints.js';
 
 export default {
      setup() {
         const isLoading = ref(true);
-        let search = ref('');
+        let search = ref("");
         let form = reactive({
             "author": "",
             "title": "",
@@ -76,13 +77,15 @@ export default {
 
         watch(() => _.cloneDeep(form), async (currentValue, oldValue) => {
               let {data} = await filterPost(form);
-              console.log(data);
               posts.key = data;
-
-              console.log(currentValue);
-              console.log(oldValue);
            }
         );
+
+        watch(search, async (selection, prevSelection) => {
+            console.log(search.value);
+            let {data} = await searchPost(search.value);
+            posts.key = data;
+        });
 
         const currentChange = async (value) => {
             currentPage.value = value;

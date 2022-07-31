@@ -11,3 +11,12 @@ export const getAllPosts = async  (page) => {
 export const filterPost = async  (filters) => {
     return await $http.post(route('admin.filter'), filters);
 }
+
+export const searchPost = async  (search) => {
+    return await $http.post(route('admin.search'), {
+        search
+    });
+}
+
+
+
