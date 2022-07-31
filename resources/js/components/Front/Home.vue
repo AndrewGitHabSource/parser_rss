@@ -25,7 +25,7 @@ export default {
         onMounted(() => store.dispatch('getPosts'));
 
         return {
-            posts
+            posts,
         }
     }
 }

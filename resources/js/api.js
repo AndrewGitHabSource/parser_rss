@@ -1,9 +1,14 @@
 import axios from "axios";
+import { ZiggyVue } from 'ziggy';
+import route from 'ziggy';
+import { Ziggy } from './ziggy';
+window.route = route;
+window.Ziggy = Ziggy;
 
 export const $http = axios.create({
-    "baseURL": "http://crud-post.loc/api",
+    "baseURL": route('home'),
     "headers": {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`,
+        "Content-Type": 'application/json',
+        "Authorization": `Bearer ${localStorage.auth_token_default}`,
     }
 });
