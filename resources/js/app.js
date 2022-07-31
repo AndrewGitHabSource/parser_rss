@@ -13,7 +13,13 @@ import driverHttpAxios       from '@websanova/vue-auth/dist/drivers/http/axios.1
 import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
 import {$http} from './api.js';
 import storeData from './posts/index';
+import { ZiggyVue } from 'ziggy';
+import route from 'ziggy';
+import { Ziggy } from './ziggy';
 
+
+window.route = route;
+window.Ziggy = Ziggy;
 
 const router = VueRouter.createRouter({
     mode: "history",
@@ -44,6 +50,12 @@ vue.use(ElementPlus)
 vue.use(router);
 vue.use(store);
 vue.use(auth);
+vue.use(ZiggyVue, Ziggy);
 vue.provide('store', store);
 vue.provide('auth', auth);
+vue.mixin({
+    methods: {
+        route: (name, params, absolute) => route(name, params, absolute, Ziggy),
+    },
+});
 vue.mount('#app');

@@ -9,5 +9,5 @@ Route::post('/auth/login', [Controllers\AuthController::class, 'login'])->name("
 Route::get('/auth/user', [Controllers\AuthController::class, 'user'])->name("user");
 
 Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
-    Route::get('/posts', [Controllers\Admin\PostController::class, 'index']);
+    Route::get('/posts', [Controllers\Admin\PostController::class, 'index'])->name('admin.posts');
 });
