@@ -39,12 +39,16 @@ class PostController extends Controller
     }
 
     public function uploadImage(ImageRequest $request): JsonResponse {
-        $name = time() . $request->file('image')->getClientOriginalName();
+        $uploadedFile = $request->file('image');
+        $filename = time().$uploadedFile->getClientOriginalName();
 
-        $request->image->storeAs('/public', $name);
-        $url = Storage::url($name);
+        Storage::disk('public')->put($filename, file_get_contents($request->image));
 
-        return response()->json(['path' => $url]);
+        Post::where('id', '=', $request->id)->update([
+            'image' => asset('storage/' . $filename),
+        ]);
+
+        return response()->json(['path' => storage_path($filename)]);
     }
 
     public function updatePost(Request $request): JsonResponse {

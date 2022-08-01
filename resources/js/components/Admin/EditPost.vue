@@ -28,10 +28,11 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'Authorization': `Bearer ${auth}`,
                 }"
-                :action="path"
+                :action="pathUploadImage"
                 :limit="1"
                 :on-exceed="handleExceed"
                 :auto-upload="false"
+                :data="data"
                 @on-success="fileUploaded">
 
                 <template #trigger>
@@ -81,6 +82,7 @@ export default {
         const route = useRoute();
         let title = ref("Edit");
         let post = reactive({
+            "id": "",
             "author": "",
             "title": "",
             "description": "",
@@ -88,6 +90,7 @@ export default {
             "link": "",
         });
         let initPost = (data) => {
+            post.id = data.id;
             post.author = data.author;
             post.title = data.title;
             post.image = data.image;
@@ -95,7 +98,9 @@ export default {
             post.link = data.link;
         };
         const upload = ref(null);
-        const path = pathUploadImage;
+        const data = {
+            "id": route.params.id,
+        }
 
         const handleExceed = (files) => {
             upload.value.clearFiles();
@@ -117,8 +122,8 @@ export default {
             }
         });
 
-        const fileUploaded = (uploadFile) => {
-            console.log(uploadFile);
+        const fileUploaded = (response) => {
+            console.log(response);
         };
 
         return {
@@ -127,7 +132,8 @@ export default {
             fileUploaded,
             submitUpload,
             handleExceed,
-            path,
+            pathUploadImage,
+            data,
             upload,
             token,
             auth,
