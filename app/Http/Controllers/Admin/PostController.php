@@ -51,8 +51,10 @@ class PostController extends Controller
         return response()->json(['path' => storage_path($filename)]);
     }
 
-    public function updatePost(Request $request): JsonResponse {
+    public function updatePost(Request $request): void {
+        $post = $request->except(['id', 'image']);
 
+        Post::where('id', '=', $request->id)->update($post);
     }
 
     public function savePost() {

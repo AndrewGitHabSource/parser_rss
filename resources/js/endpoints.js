@@ -26,5 +26,9 @@ export const getPost = async (id) => {
     });
 }
 
+export const updatePost = async (post) => {
+    return await $http.post(route('admin.update.post'), post);
+}
+
 
 

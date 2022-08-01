@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2>Edit Post</h2>
+        <h2>Create Post</h2>
 
         <el-form :model="post" label-width="120px">
             <el-form-item label="Author">
@@ -18,39 +18,6 @@
             <el-form-item label="Link">
                 <el-input v-model="post.link" />
             </el-form-item>
-
-            <el-upload
-                ref="upload"
-                class="upload"
-                name="image"
-                :headers="{
-                    'X-CSRF-TOKEN': token,
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Authorization': `Bearer ${auth}`,
-                }"
-                :action="pathUploadImage"
-                :limit="1"
-                :on-exceed="handleExceed"
-                :auto-upload="false"
-                :data="data"
-                @on-success="fileUploaded">
-
-                <template #trigger>
-                    <el-button type="primary" class="button-select">
-                        select file
-                    </el-button>
-                </template>
-
-                <el-button class="ml-3" type="success" @click="submitUpload">
-                    upload to server
-                </el-button>
-
-                <template #tip>
-                    <div class="el-upload__tip text-red">
-                        limit 1 file, new file will cover the old file
-                    </div>
-                </template>
-            </el-upload>
 
             <div class="image">
                 <div class="image-container">
@@ -77,9 +44,7 @@ import { genFileId } from 'element-plus';
 
 export default {
     setup() {
-        const token = window.Laravel.csrfToken;
-        const auth = localStorage.auth_token_default;
-        const route = useRoute();
+        let title = ref("Edit");
         let post = reactive({
             "id": "",
             "author": "",
@@ -96,21 +61,6 @@ export default {
             post.description = data.description;
             post.link = data.link;
         };
-        const upload = ref(null);
-        const data = {
-            "id": route.params.id,
-        }
-
-        const handleExceed = (files) => {
-            upload.value.clearFiles();
-            const file = files[0];
-            file.uid = genFileId();
-            upload.value.handleStart(file);
-        }
-
-        const submitUpload = () => {
-            upload.value.submit();
-        }
 
         const onSubmit = async () => {
             try {
@@ -120,29 +70,10 @@ export default {
             }
         }
 
-        onMounted(async () => {
-            try {
-                let {data} = await getPost(route.params.id);
-                initPost(data);
-            } catch (error) {
-                console.log(error);
-            }
-        });
-
-        const fileUploaded = (response) => {
-            console.log(response);
-        };
-
         return {
+            title,
             post,
-            fileUploaded,
-            submitUpload,
-            handleExceed,
-            pathUploadImage,
             onSubmit,
-            data,
-            upload,
-            token,
             auth,
         }
     }
