@@ -8,7 +8,6 @@ window.Ziggy = Ziggy;
 export const $http = axios.create({
     "baseURL": route('home'),
     "headers": {
-        "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.auth_token_default}`,
         "X-XSRF-TOKEN": window.Laravel.csrfToken,

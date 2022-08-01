@@ -32,8 +32,7 @@
                 :limit="1"
                 :on-exceed="handleExceed"
                 :auto-upload="false"
-                :data="data"
-                @on-success="fileUploaded">
+                :data="data">
 
                 <template #trigger>
                     <el-button type="primary" class="button-select">
@@ -70,8 +69,8 @@
 </template>
 
 <script>
-import { reactive, onMounted, ref, watch } from "vue";
-import {pathUploadImage, getPost, updatePost, getAllPosts} from '../../endpoints.js';
+import {reactive, onMounted, ref, inject} from "vue";
+import {pathUploadImage, getPost, updatePost} from '../../endpoints.js';
 import { useRoute } from 'vue-router';
 import { genFileId } from 'element-plus';
 
@@ -79,6 +78,7 @@ export default {
     setup() {
         const token = window.Laravel.csrfToken;
         const auth = localStorage.auth_token_default;
+        let router = inject("router");
         const route = useRoute();
         let post = reactive({
             "id": "",
@@ -115,6 +115,7 @@ export default {
         const onSubmit = async () => {
             try {
                 await updatePost(post);
+                router.push({name: 'dashboard'});
             } catch (error) {
                 console.log(error);
             }
@@ -129,13 +130,8 @@ export default {
             }
         });
 
-        const fileUploaded = (response) => {
-            console.log(response);
-        };
-
         return {
             post,
-            fileUploaded,
             submitUpload,
             handleExceed,
             pathUploadImage,

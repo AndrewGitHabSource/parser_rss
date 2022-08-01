@@ -2,6 +2,7 @@ import Home from './components/Front/Home.vue';
 import Register from './components/Front/Login.vue';
 import Dashboard from './components/Admin/Dashboard.vue';
 import EditPost from './components/Admin/EditPost.vue';
+import SavePost from './components/Admin/SavePost.vue';
 
 export const routes = [
     {
@@ -26,6 +27,14 @@ export const routes = [
         name: 'editPost',
         path: '/admin/edit-post/:id',
         component: EditPost,
+        meta: {
+            auth: true,
+        },
+    },
+    {
+        name: 'savePost',
+        path: '/admin/save-post',
+        component: SavePost,
         meta: {
             auth: true,
         },

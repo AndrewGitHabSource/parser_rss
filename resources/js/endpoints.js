@@ -1,11 +1,14 @@
 import { $http } from "./api";
+import axios from "axios";
+
 
 export const pathUploadImage = route('admin.upload.image');
 
-export const getAllPosts = async (page) => {
+export const getAllPosts = async (page, sort = 'ASC') => {
     return await $http.get(route('admin.posts'), {
         "params": {
             "page": page,
+            "sort": sort,
         }
     });
 }
@@ -28,6 +31,15 @@ export const getPost = async (id) => {
 
 export const updatePost = async (post) => {
     return await $http.post(route('admin.update.post'), post);
+}
+
+export const savePost = async (post) => {
+    return await $http.post(route('admin.save.post'),
+        post,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
 }
 
 

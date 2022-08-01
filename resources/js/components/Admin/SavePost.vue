@@ -19,31 +19,24 @@
                 <el-input v-model="post.link" />
             </el-form-item>
 
-            <div class="image">
-                <div class="image-container">
-                    <h4>Image</h4>
-
-                    <img v-bind:src="post.image" alt="Image"/>
-                </div>
-            </div>
+            <el-form-item label="Link">
+                <el-input name="image" v-model="post.image" type="file" />
+            </el-form-item>
 
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">Save</el-button>
-
-                <el-button>Cancel</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
-import { reactive, onMounted, ref, watch } from "vue";
-import {pathUploadImage, getPost, updatePost, getAllPosts} from '../../endpoints.js';
-import { useRoute } from 'vue-router';
-import { genFileId } from 'element-plus';
+import {reactive, ref, inject} from "vue";
+import { savePost } from '../../endpoints.js';
 
 export default {
     setup() {
+        let router = inject("router");
         let title = ref("Edit");
         let post = reactive({
             "id": "",
@@ -53,18 +46,18 @@ export default {
             "image": "",
             "link": "",
         });
-        let initPost = (data) => {
-            post.id = data.id;
-            post.author = data.author;
-            post.title = data.title;
-            post.image = data.image;
-            post.description = data.description;
-            post.link = data.link;
-        };
 
         const onSubmit = async () => {
             try {
-                await updatePost(post);
+                let formData = new FormData();
+                formData.append("author", post.author);
+                formData.append("title", post.title);
+                formData.append("description", post.description);
+                formData.append("image", post.image);
+                formData.append("link", post.link);
+
+                await savePost(formData);
+                router.push({name: 'dashboard'});
             } catch (error) {
                 console.log(error);
             }
@@ -74,7 +67,6 @@ export default {
             title,
             post,
             onSubmit,
-            auth,
         }
     }
 }

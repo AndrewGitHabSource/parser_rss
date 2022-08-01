@@ -4,6 +4,12 @@
 
         <h2>Filter posts</h2>
 
+        <nav>
+            <el-button @click="addPost()" type="primary">Add Post</el-button>
+
+            <el-button @click="sort()" type="primary">Sort</el-button>
+        </nav>
+
         <el-form class="form-filter" :model="form" label-width="120px">
             <el-form-item class="form-element" label="Filter author">
                 <el-input v-model="form.author" />
@@ -45,7 +51,7 @@
 </template>
 
 <script>
-    import { inject, reactive, computed, onMounted, ref, watch } from "vue";
+    import { inject, reactive, onMounted, ref, watch } from "vue";
     import { getAllPosts } from '../../endpoints.js';
     import { filterPost } from '../../endpoints.js';
     import { searchPost } from '../../endpoints.js';
@@ -62,6 +68,7 @@
             });
             let posts = reactive({"key": null});
             let currentPage = ref(1);
+            let sortParam = false;
 
             const getPosts = async () => {
                 isLoading.value = true;
@@ -85,6 +92,17 @@
 
             const edit = ({id}) => {
                 router.push({name: 'editPost', params: {id} });
+            }
+
+            const addPost = () => {
+                router.push({name: 'savePost' });
+            }
+
+            const sort = async () => {
+                sortParam = !sortParam;
+                let param = sortParam ? 'DESC' : 'ASC';
+                let {data} = await getAllPosts(currentPage.value, param);
+                posts.key = data;
             }
 
             const drop = () => {
@@ -113,6 +131,8 @@
                 currentChange,
                 currentPage,
                 form,
+                addPost,
+                sort,
             }
         }
     }
@@ -130,5 +150,9 @@
     .form-filter {
         display: flex;
         justify-content: space-between;
+    }
+
+    nav {
+        margin-bottom: 20px;
     }
 </style>
