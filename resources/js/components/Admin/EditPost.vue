@@ -12,9 +12,7 @@
             </el-form-item>
 
             <el-form-item label="Description">
-                <div class="wrap-editor">
-                    <QuillEditor v-model="post.description" theme="snow" />
-                </div>
+                <el-input v-model="post.description" type="textarea" />
             </el-form-item>
 
             <el-form-item label="Link">
@@ -23,23 +21,56 @@
 
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">Create</el-button>
+
                 <el-button>Cancel</el-button>
             </el-form-item>
         </el-form>
+
+        <div class="image">
+            <div class="image-container">
+                <h4>Image</h4>
+
+                <img v-bind:src="post.image" alt="Image"/>
+            </div>
+
+            <el-upload
+                ref="upload"
+                class="upload-demo"
+                action="{{pathUploadImage}}"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :auto-upload="false">
+
+                <template #trigger>
+                    <el-button type="primary" class="button-select">
+                        select file
+                    </el-button>
+                </template>
+
+                <el-button class="ml-3" type="success" @click="submitUpload">
+                    upload to server
+                </el-button>
+
+                <template #tip>
+                    <div class="el-upload__tip text-red">
+                        limit 1 file, new file will cover the old file
+                    </div>
+                </template>
+            </el-upload>
+        </div>
     </div>
 </template>
 
 <script>
 import { inject, reactive, computed, onMounted, ref, watch } from "vue";
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { pathUploadImage, getPost } from '../../endpoints.js';
+import { useRoute } from 'vue-router';
+import { genFileId } from 'element-plus'
+import { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
 
 export default {
-    components: {
-        QuillEditor,
-    },
-
     setup() {
+        const route = useRoute();
         let title = ref("Edit");
         let post = reactive({
             "author": "",
@@ -47,6 +78,35 @@ export default {
             "description": "",
             "image": "",
             "link": "",
+        });
+        let initPost = (data) => {
+            post.author = data.author;
+            post.title = data.title;
+            post.image = data.image;
+            post.description = data.description;
+            post.link = data.link;
+        };
+
+        const upload = null;
+
+        const handleExceed = (files) => {
+            upload.value.clearFiles()
+            const file = files[0];
+            file.uid = genFileId()
+            upload.value.handleStart(file)
+        }
+
+        const submitUpload = () => {
+            upload.value.submit();
+        }
+
+        onMounted(async () => {
+            try {
+                let {data} = await getPost(route.params.id);
+                initPost(data);
+            } catch (error) {
+                console.log(error);
+            }
         });
 
         const onSubmit = () => {
@@ -57,14 +117,34 @@ export default {
             title,
             post,
             onSubmit,
+            submitUpload,
+            handleExceed,
+            pathUploadImage,
         }
     }
 }
 </script>
 
 <style scoped>
-    .wrap-editor {
-        margin-bottom: 20px;
-        width: 100%;
+    .image {
+        display: flex;
+    }
+
+    .image-container {
+        max-width: 400px;
+        margin-right: 40px;
+    }
+
+    .image-container img {
+        max-width: 100%;
+    }
+
+    .button-select {
+        position: relative;
+        top: 2px;
+    }
+
+    .el-button--primary {
+        margin: 0 10px 0 0;
     }
 </style>

@@ -31,4 +31,20 @@ class PostController extends Controller
     public function search(Request $request): JsonResponse {
         return response()->json($this->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post'));
     }
+
+    public function getPost(Request $request): JsonResponse {
+        return response()->json(Post::find($request->id));
+    }
+
+    public function uploadImage(Request $request): JsonResponse {
+
+    }
+
+    public function updatePost(Request $request): JsonResponse {
+
+    }
+
+    public function savePost() {
+
+    }
 }

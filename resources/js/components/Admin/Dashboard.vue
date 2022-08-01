@@ -76,17 +76,6 @@
                 }
             }
 
-            watch(() => _.cloneDeep(form), async () => {
-                  let {data} = await filterPost(form);
-                  posts.key = data;
-               }
-            );
-
-            watch(search, async () => {
-                let {data} = await searchPost(search.value);
-                posts.key = data;
-            });
-
             const currentChange = async (value) => {
                 currentPage.value = value;
 
@@ -95,7 +84,7 @@
             }
 
             const edit = ({id}) => {
-                router.push({name: 'editPost', params: { id } });
+                router.push({name: 'editPost', params: {id} });
             }
 
             const drop = () => {
@@ -103,6 +92,17 @@
             }
 
             onMounted(getPosts);
+
+             watch(() => _.cloneDeep(form), async () => {
+                     let {data} = await filterPost(form);
+                     posts.key = data;
+                 }
+             );
+
+             watch(search, async () => {
+                 let {data} = await searchPost(search.value);
+                 posts.key = data;
+             });
 
             return {
                 posts,
