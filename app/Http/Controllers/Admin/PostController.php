@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Filters\PostsFilter;
 use App\Traits\Searchable;
+use App\Http\Requests\ImageRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -36,8 +38,13 @@ class PostController extends Controller
         return response()->json(Post::find($request->id));
     }
 
-    public function uploadImage(Request $request): JsonResponse {
+    public function uploadImage(ImageRequest $request): JsonResponse {
+        $name = time() . $request->file('image')->getClientOriginalName();
 
+        $request->image->storeAs('/public', $name);
+        $url = Storage::url($name);
+
+        return response()->json(['path' => $url]);
     }
 
     public function updatePost(Request $request): JsonResponse {

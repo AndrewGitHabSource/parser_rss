@@ -8,4 +8,5 @@
     <p>npm install</p>
     <p>php artisan ziggy:generate</p>
     <p>npm run dev</p>
+    <p>php artisan feeds:load</p>
 </div>

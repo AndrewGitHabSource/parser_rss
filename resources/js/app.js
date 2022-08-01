@@ -21,6 +21,7 @@ window.route = route;
 window.Ziggy = Ziggy;
 window._ = require('lodash');
 
+
 const router = VueRouter.createRouter({
     mode: "history",
     history: VueRouter.createWebHistory(),

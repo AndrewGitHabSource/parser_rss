@@ -19,27 +19,20 @@
                 <el-input v-model="post.link" />
             </el-form-item>
 
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">Create</el-button>
-
-                <el-button>Cancel</el-button>
-            </el-form-item>
-        </el-form>
-
-        <div class="image">
-            <div class="image-container">
-                <h4>Image</h4>
-
-                <img v-bind:src="post.image" alt="Image"/>
-            </div>
-
             <el-upload
                 ref="upload"
-                class="upload-demo"
-                action="{{pathUploadImage}}"
+                class="upload"
+                name="image"
+                :headers="{
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Authorization': `Bearer ${auth}`,
+                }"
+                :action="path"
                 :limit="1"
                 :on-exceed="handleExceed"
-                :auto-upload="false">
+                :auto-upload="false"
+                @on-success="fileUploaded">
 
                 <template #trigger>
                     <el-button type="primary" class="button-select">
@@ -57,6 +50,20 @@
                     </div>
                 </template>
             </el-upload>
+
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">Create</el-button>
+
+                <el-button>Cancel</el-button>
+            </el-form-item>
+        </el-form>
+
+        <div class="image">
+            <div class="image-container">
+                <h4>Image</h4>
+
+                <img v-bind:src="post.image" alt="Image"/>
+            </div>
         </div>
     </div>
 </template>
@@ -65,11 +72,12 @@
 import { inject, reactive, computed, onMounted, ref, watch } from "vue";
 import { pathUploadImage, getPost } from '../../endpoints.js';
 import { useRoute } from 'vue-router';
-import { genFileId } from 'element-plus'
-import { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
+import { genFileId } from 'element-plus';
 
 export default {
     setup() {
+        const token = window.Laravel.csrfToken;
+        const auth = localStorage.auth_token_default;
         const route = useRoute();
         let title = ref("Edit");
         let post = reactive({
@@ -86,14 +94,14 @@ export default {
             post.description = data.description;
             post.link = data.link;
         };
-
-        const upload = null;
+        const upload = ref(null);
+        const path = pathUploadImage;
 
         const handleExceed = (files) => {
-            upload.value.clearFiles()
+            upload.value.clearFiles();
             const file = files[0];
-            file.uid = genFileId()
-            upload.value.handleStart(file)
+            file.uid = genFileId();
+            upload.value.handleStart(file);
         }
 
         const submitUpload = () => {
@@ -109,17 +117,20 @@ export default {
             }
         });
 
-        const onSubmit = () => {
-
+        const fileUploaded = (uploadFile) => {
+            console.log(uploadFile);
         };
 
         return {
             title,
             post,
-            onSubmit,
+            fileUploaded,
             submitUpload,
             handleExceed,
-            pathUploadImage,
+            path,
+            upload,
+            token,
+            auth,
         }
     }
 }

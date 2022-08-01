@@ -17,6 +17,7 @@
             font-family: 'Nunito', sans-serif;
         }
     </style>
+    <script>window.Laravel = {csrfToken: '{{ csrf_token() }}'}</script>
 </head>
 
 <body class="body">
