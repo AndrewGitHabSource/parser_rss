@@ -12,11 +12,12 @@ class ParsingService
     public function insertFeeds(): void {
         foreach($this->getAllFeeds() as $value) {
             $image = $this->getImage($value->get_description());
+            $description = $this->getDescription($value->get_description());
 
             Post::create([
                 'author' => $value->get_author()->name,
                 'title' => $value->get_title(),
-                'description' => $value->get_description(),
+                'description' => $description,
                 'image' => end($image),
                 'link' => $value->get_link(),
             ]);
@@ -30,5 +31,10 @@ class ParsingService
     private function getImage(string $text): array {
         preg_match_all('@<img.*src="([^"]*)"[^>/]*/?>@Ui', $text, $out);
         return end($out);
+    }
+
+    private function getDescription($html){
+        preg_match('/<p>(.*?)<\/p>/s', $html, $match);
+        return array_shift($match);
     }
 }

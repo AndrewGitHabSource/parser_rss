@@ -1,6 +1,4 @@
 import { $http } from "./api";
-import axios from "axios";
-
 
 export const pathUploadImage = route('admin.upload.image');
 
