@@ -59,7 +59,7 @@ class PostController extends Controller
     }
 
     public function savePost(PostRequest $request): void {
-        if ($request->file('image')){
+        if ($request->file('image')) {
             $filename = time() . $request->file('image')->getClientOriginalName();
             Storage::disk('public')->put($filename, file_get_contents($request->file('image')));
         } else {
@@ -70,9 +70,8 @@ class PostController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'author' => $request->author,
-            'image' => $filename,
+            'image' => asset('storage/' . $filename),
             'link' => $request->link
         ]);
     }
-
 }

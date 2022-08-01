@@ -19,8 +19,8 @@
                 <el-input v-model="post.link" />
             </el-form-item>
 
-            <el-form-item label="Link">
-                <el-input name="image" v-model="post.image" type="file" />
+            <el-form-item label="Image">
+                <input @change="onFileChange" type="file" name="image" accept="image/jpeg, image/png">
             </el-form-item>
 
             <el-form-item>
@@ -43,7 +43,7 @@ export default {
             "author": "",
             "title": "",
             "description": "",
-            "image": "",
+            "image": null,
             "link": "",
         });
 
@@ -63,10 +63,18 @@ export default {
             }
         }
 
+        const onFileChange = (e) => {
+            let files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            post.image = files[0];
+        };
+
         return {
             title,
             post,
             onSubmit,
+            onFileChange,
         }
     }
 }
