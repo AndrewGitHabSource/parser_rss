@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::post('/image/upload', [Controllers\Admin\PostController::class, 'uploadImage'])->name('admin.upload.image');
     Route::post('/post/updatePost', [Controllers\Admin\PostController::class, 'updatePost'])->name('admin.update.post');
     Route::post('/post/savePost', [Controllers\Admin\PostController::class, 'savePost'])->name('admin.save.post');
+    Route::get('/post/delete', [Controllers\Admin\PostController::class, 'delete'])->name('admin.delete.post');
 });

@@ -5,30 +5,46 @@
 
     </div>
 
-    <form>
-        <el-input v-model="form.login" placeholder="Please input login"/>
+    <el-form
+        ref="ruleFormLogin"
+        :model="form"
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm"
+        status-icon>
 
-        <el-input v-model="form.password" placeholder="Please input password"/>
+        <el-form-item label="Login" prop="login">
+            <el-input v-model="form.login" />
+        </el-form-item>
+        <el-form-item label="Password" prop="password">
+            <el-input v-model="form.password" />
+        </el-form-item>
 
-        <el-button @click="login">Submit</el-button>
-    </form>
+        <el-form-item>
+            <el-button type="primary" @click="login(ruleFormLogin)">Create</el-button>
+        </el-form-item>
+    </el-form>
 </template>
 
 <script>
     import { reactive } from "vue";
     import { ref } from "vue";
     import { inject } from 'vue';
+    import { checkForm, rules } from '../validation/login';
 
     export default {
-        setup() {
+        setup(props) {
             let auth = inject("auth");
             let form = reactive({
                 login: "",
                 password: "",
             });
             let error = ref(null);
+            let ruleFormLogin = ref();
 
-            function login() {
+            const login = async (ruleFormLogin) => {
+                await checkForm(ruleFormLogin);
+
                 try {
                     auth.login({
                         "data": {
@@ -50,6 +66,8 @@
                 form,
                 login,
                 error,
+                ruleFormLogin,
+                rules,
             }
         }
     }

@@ -36,9 +36,14 @@ export const savePost = async (post) => {
         post,{
             headers: {
                 'Content-Type': 'multipart/form-data'
-            }
+            },
         });
 }
 
-
-
+export const deletePost = async (id) => {
+    return await $http.get(route('admin.delete.post'), {
+        "params": {
+            id,
+        },
+    });
+}

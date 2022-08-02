@@ -40,7 +40,7 @@
                     <template #default="scope">
                         <el-button size="small" @click="edit(scope.row)">Edit</el-button>
 
-                        <el-button size="small" type="danger" @click="drop(scope.$index, scope.row)">Delete</el-button>
+                        <el-button size="small" type="danger" @click="drop(scope.row)">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -52,9 +52,7 @@
 
 <script>
     import { inject, reactive, onMounted, ref, watch } from "vue";
-    import { getAllPosts } from '../../endpoints.js';
-    import { filterPost } from '../../endpoints.js';
-    import { searchPost } from '../../endpoints.js';
+    import { getAllPosts, deletePost, filterPost, searchPost } from '../../endpoints.js';
 
     export default {
          setup() {
@@ -105,8 +103,14 @@
                 posts.key = data;
             }
 
-            const drop = () => {
-
+            const drop = async ({id}) => {
+                try {
+                    await deletePost(id);
+                    let {data} = await getAllPosts(currentPage.value);
+                    posts.key = data;
+                } catch (error) {
+                    console.log(error);
+                }
             }
 
             onMounted(getPosts);

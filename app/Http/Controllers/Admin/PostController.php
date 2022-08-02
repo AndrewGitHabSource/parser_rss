@@ -74,4 +74,8 @@ class PostController extends Controller
             'link' => $request->link
         ]);
     }
+
+    public function delete(Request $request) {
+        Post::where('id', '=', $request->id)->delete();
+    }
 }
