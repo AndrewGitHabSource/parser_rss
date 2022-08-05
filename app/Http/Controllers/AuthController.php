@@ -29,7 +29,7 @@ class AuthController extends Controller
         }
     }
 
-    public function user() {
+    public function user(): JsonResponse {
         return response()->json(Auth::user());
     }
 }

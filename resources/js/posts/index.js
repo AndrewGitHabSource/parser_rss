@@ -1,12 +1,9 @@
-import axios from 'axios';
-import { createStore } from 'vuex';
-import {$http} from '../api.js';
-import { inject } from 'vue';
+import { $http } from '../api.js';
 
 export default {
     state() {
         return {
-            posts: null
+            posts: null,
         }
     },
 

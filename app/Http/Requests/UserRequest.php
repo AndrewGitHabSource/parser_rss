@@ -6,11 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
 {
-    public function rules()
-    {
+    public function rules(): array {
         return [
             'login' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ];
     }
 }

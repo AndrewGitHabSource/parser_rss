@@ -5,9 +5,9 @@ import { routes } from './routes';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import { createStore } from 'vuex';
-import { createAuth }          from '@websanova/vue-auth';
-import driverAuthBearer      from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
-import driverHttpAxios       from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
+import { createAuth } from '@websanova/vue-auth';
+import driverAuthBearer from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
+import driverHttpAxios from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
 import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
 import storeData from './posts/index';
 import VueLodash from 'vue-lodash';
@@ -20,7 +20,6 @@ import { $http } from './api.js';
 window.route = route;
 window.Ziggy = Ziggy;
 window._ = require('lodash');
-
 
 const router = VueRouter.createRouter({
     mode: "history",
