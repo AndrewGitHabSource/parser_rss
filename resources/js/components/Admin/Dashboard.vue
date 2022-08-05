@@ -59,7 +59,7 @@
 
 <script>
     import { inject, reactive, onMounted, ref, watch } from "vue";
-    import { getAllPosts, deletePost, filterPost, searchPost } from '../../endpoints.js';
+    import { getAllPosts, deletePost, searchPost } from '../../endpoints.js';
 
     export default {
          setup() {
@@ -72,7 +72,7 @@
                 "description": "",
             });
             let posts = reactive({"key": null});
-            let currentPage = ref();
+            let currentPage = ref(1);
             let sortParam = false;
             let currentUrl = "posts";
             let total = ref(1);
@@ -82,7 +82,7 @@
                 currentUrl = "post";
 
                 try {
-                    let {data} = await getAllPosts(currentPage.value);
+                    let {data} = await getAllPosts(currentPage.value, form);
                     posts.key = data.posts;
                     total.value = data.total;
                 } catch (error) {
@@ -98,16 +98,16 @@
 
                 switch (currentUrl) {
                     case "posts":
-                        data = await getAllPosts(value);
+                        data = await getAllPosts(value, form);
                         break;
                     case "search":
-                        data = await searchPost({"search": search.value, "page": value});
-                        break;
-                    case "filter":
-                        data = await filterPost({...form, "page": value});
+                        data = await searchPost({
+                            "search": search.value,
+                            "page": value,
+                        });
                         break;
                     default:
-                        data = await getAllPosts(value);
+                        data = await getAllPosts(value, form);
                 }
 
                 posts.key = data.data.posts;
@@ -124,14 +124,14 @@
             const sort = async () => {
                 sortParam = !sortParam;
                 let param = sortParam ? 'DESC' : 'ASC';
-                let {data} = await getAllPosts(currentPage.value, param);
+                let {data} = await getAllPosts(currentPage.value, form, param);
                 posts.key = data.posts;
             }
 
             const drop = async ({id}) => {
                 try {
                     await deletePost(id);
-                    let {data} = await getAllPosts(currentPage.value);
+                    let {data} = await getAllPosts(currentPage.value, form);
                     posts.key = data;
                 } catch (error) {
                     console.log(error);
@@ -141,9 +141,9 @@
             onMounted(getPosts);
 
             watch(() => _.cloneDeep(form), async () => {
-                currentUrl = "filter";
+                currentUrl = "posts";
 
-                let {data} = await filterPost({...form, "page": currentPage.value});
+                let {data} = await getAllPosts(currentPage.value, form);
                     posts.key = data.posts;
                     total.value = data.total;
                 }

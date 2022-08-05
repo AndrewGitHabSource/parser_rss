@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class PostsFilter extends QueryFilter
@@ -16,24 +15,29 @@ class PostsFilter extends QueryFilter
         $this->limit = config('common.limitPagination');
     }
 
-    public function description(string $description)
+    public function description(string $description): void
     {
         $this->builder->where('description', 'like', '%' . strtolower($description) . '%');
     }
 
-    public function title(string $title)
+    public function title(string $title): void
     {
         $this->builder->where('title', 'like', '%' . strtolower($title) . '%');
     }
 
-    public function author(string $author)
+    public function author(string $author): void
     {
         $this->builder->where('author', 'like', '%' . strtolower($author) . '%');
     }
 
-    public function page(int $page)
+    public function page(int $page): void
     {
         $skip = $page === 1 ? 0 : ($this->limit * $page) - $this->limit;
         $this->builder->skip($skip)->take($this->limit);
+    }
+
+    public function sort(string $sort) {
+        $order = $sort ?? "DESC";
+        $this->builder->orderBy('title', $order);
     }
 }

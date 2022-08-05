@@ -23,15 +23,13 @@ class PostController extends Controller
         $this->limit = config('common.limitPagination');
     }
 
-    public function index(Request $request): JsonResponse {
+    public function index(PostsFilter $request): JsonResponse {
         $order = $request->sort ?? "DESC";
-        $posts = Post::skip($this->skip($request))->take($this->limit)->orderBy('title', $order)->get();
 
-        return response()->json(["posts" => $posts, "total" => Post::count()]);
-    }
-
-    public function filter(PostsFilter $request): JsonResponse {
-        return response()->json(["posts" => Post::filter($request)->get(), "total" => Post::filter($request)->count()]);
+        return response()->json([
+            "posts" => Post::filter($request)->orderBy('title', $order)->get(),
+            "total" => Post::filter($request)->count(),
+        ]);
     }
 
     public function search(Request $request): JsonResponse {

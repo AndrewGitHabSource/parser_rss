@@ -2,17 +2,12 @@ import { $http } from "./api";
 
 export const pathUploadImage = route('admin.upload.image');
 
-export const getAllPosts = async (page, sort = 'ASC') => {
-    return await $http.get(route('admin.posts'), {
-        "params": {
-            "page": page,
-            "sort": sort,
-        }
+export const getAllPosts = async (page, filters, sort = 'ASC') => {
+    return await $http.post(route('admin.posts'), {
+        ...filters,
+        page,
+        sort,
     });
-}
-
-export const filterPost = async (filters) => {
-    return await $http.post(route('admin.filter'), filters);
 }
 
 export const searchPost = async (data) => {
