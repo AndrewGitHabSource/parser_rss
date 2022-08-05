@@ -8,35 +8,30 @@ class PostsFilter extends QueryFilter
 {
     private $limit;
 
-    public function __construct(Request $request)
-    {
+    public function __construct(Request $request) {
         parent::__construct($request);
 
         $this->limit = config('common.limitPagination');
     }
 
-    public function description(string $description): void
-    {
+    public function description(string $description): void {
         $this->builder->where('description', 'like', '%' . strtolower($description) . '%');
     }
 
-    public function title(string $title): void
-    {
+    public function title(string $title): void {
         $this->builder->where('title', 'like', '%' . strtolower($title) . '%');
     }
 
-    public function author(string $author): void
-    {
+    public function author(string $author): void {
         $this->builder->where('author', 'like', '%' . strtolower($author) . '%');
     }
 
-    public function page(int $page): void
-    {
+    public function page(int $page): void {
         $skip = $page === 1 ? 0 : ($this->limit * $page) - $this->limit;
         $this->builder->skip($skip)->take($this->limit);
     }
 
-    public function sort(string $sort) {
+    public function sort(string $sort): void {
         $order = $sort ?? "DESC";
         $this->builder->orderBy('title', $order);
     }

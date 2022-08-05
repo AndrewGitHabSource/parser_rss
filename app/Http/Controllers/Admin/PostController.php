@@ -33,16 +33,17 @@ class PostController extends Controller
     }
 
     public function search(Request $request): JsonResponse {
-        $total = $this
-            ->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post')
-            ->count();
+        $columns = ['author', 'title', 'description'];
+        $model = 'App\Models\Post';
+
+        $total = $this->fullSearch($request->search, $columns, $model)->count();
+
         $posts = $this
-            ->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post')
+            ->fullSearch($request->search, $columns, $model)
             ->skip($this->skip($request))
             ->take($this->limit)->get();
 
-        return response()
-            ->json([
+        return response()->json([
                 "posts" => $posts,
                 "total" => $total,
             ]);
@@ -82,7 +83,7 @@ class PostController extends Controller
             'description' => $request->description,
             'author' => $request->author,
             'image' => asset('storage/' . $filename),
-            'link' => $request->link
+            'link' => $request->link,
         ]);
     }
 

@@ -5,17 +5,17 @@ import { routes } from './routes';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import { createStore } from 'vuex';
-import {createAuth}          from '@websanova/vue-auth';
+import { createAuth }          from '@websanova/vue-auth';
 import driverAuthBearer      from '@websanova/vue-auth/dist/drivers/auth/bearer.esm.js';
 import driverHttpAxios       from '@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js';
 import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js';
 import storeData from './posts/index';
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
-import {ZiggyVue} from 'ziggy';
+import { ZiggyVue } from 'ziggy';
 import route from 'ziggy';
-import {Ziggy} from './ziggy';
-import {$http} from './api.js';
+import { Ziggy } from './ziggy';
+import { $http } from './api.js';
 
 window.route = route;
 window.Ziggy = Ziggy;
@@ -47,7 +47,7 @@ const auth = createAuth({
 const store = createStore(storeData);
 
 const vue = createApp(Main);
-vue.use(ElementPlus)
+vue.use(ElementPlus);
 vue.use(router);
 vue.use(store);
 vue.use(auth);
