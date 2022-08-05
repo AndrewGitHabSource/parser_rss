@@ -14,7 +14,7 @@ class AuthController extends Controller
             $token = $user->authenticate($request);
             if(!$token) {
                 return response()->json([
-                    'message' => 'Login & Password does not match with our record.',
+                    'message' => config('common.loginError'),
                 ], 401);
             }
 

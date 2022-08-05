@@ -1,5 +1,4 @@
-import { reactive, ref } from 'vue';
-import { FormInstance, FormRules } from 'element-plus';
+import { reactive } from 'vue';
 
 export const rules = reactive({
     login: [

@@ -26,9 +26,9 @@
 
         <div class="container" v-loading="isLoading">
             <el-table :data="posts.key" style="width: 100%">
-                <el-table-column label="Author" prop="author" />
+                <el-table-column label="Author" prop="author" sortable />
 
-                <el-table-column label="Title" prop="title" />
+                <el-table-column label="Title" prop="title" sortable />
 
                 <el-table-column label="Link" prop="link" />
 
@@ -45,7 +45,14 @@
                 </el-table-column>
             </el-table>
 
-            <el-pagination @current-change="currentChange" small background layout="prev, pager, next" :total="50" class="mt-4"/>
+            <el-pagination
+                @current-change="currentChange"
+                :total="total"
+                :page-size="5"
+                small
+                background
+                layout="prev, pager, next"
+                class="mt-4"/>
         </div>
     </div>
 </template>
@@ -56,8 +63,8 @@
 
     export default {
          setup() {
-            let router = inject("router");
             const isLoading = ref(true);
+            let router = inject("router");
             let search = ref("");
             let form = reactive({
                 "author": "",
@@ -65,15 +72,19 @@
                 "description": "",
             });
             let posts = reactive({"key": null});
-            let currentPage = ref(1);
+            let currentPage = ref();
             let sortParam = false;
+            let currentUrl = "posts";
+            let total = ref(1);
 
             const getPosts = async () => {
                 isLoading.value = true;
+                currentUrl = "post";
 
                 try {
                     let {data} = await getAllPosts(currentPage.value);
-                    posts.key = data;
+                    posts.key = data.posts;
+                    total.value = data.total;
                 } catch (error) {
                     console.log(error);
                 } finally {
@@ -83,13 +94,27 @@
 
             const currentChange = async (value) => {
                 currentPage.value = value;
+                let data = {};
 
-                let {data} = await getAllPosts(currentPage.value);
-                posts.key = data;
+                switch (currentUrl) {
+                    case "posts":
+                        data = await getAllPosts(value);
+                        break;
+                    case "search":
+                        data = await searchPost({"search": search.value, "page": value});
+                        break;
+                    case "filter":
+                        data = await filterPost({...form, "page": value});
+                        break;
+                    default:
+                        data = await getAllPosts(value);
+                }
+
+                posts.key = data.data.posts;
             }
 
             const edit = ({id}) => {
-                router.push({name: 'editPost', params: {id} });
+                router.push({name: 'editPost', params: {id}});
             }
 
             const addPost = () => {
@@ -100,7 +125,7 @@
                 sortParam = !sortParam;
                 let param = sortParam ? 'DESC' : 'ASC';
                 let {data} = await getAllPosts(currentPage.value, param);
-                posts.key = data;
+                posts.key = data.posts;
             }
 
             const drop = async ({id}) => {
@@ -115,16 +140,22 @@
 
             onMounted(getPosts);
 
-             watch(() => _.cloneDeep(form), async () => {
-                     let {data} = await filterPost(form);
-                     posts.key = data;
-                 }
-             );
+            watch(() => _.cloneDeep(form), async () => {
+                currentUrl = "filter";
 
-             watch(search, async () => {
-                 let {data} = await searchPost(search.value);
-                 posts.key = data;
-             });
+                let {data} = await filterPost({...form, "page": currentPage.value});
+                    posts.key = data.posts;
+                    total.value = data.total;
+                }
+            );
+
+            watch(search, async () => {
+                currentUrl = "search";
+
+                let {data} = await searchPost({"search": search.value, "page": currentPage.value});
+                posts.key = data.posts;
+                total.value = data.total;
+            });
 
             return {
                 posts,
@@ -137,6 +168,7 @@
                 form,
                 addPost,
                 sort,
+                total,
             }
         }
     }

@@ -16,25 +16,38 @@ class PostController extends Controller
 {
     use Searchable;
 
+    private $limit;
+
+    public function __construct()
+    {
+        $this->limit = config('common.limitPagination');
+    }
+
     public function index(Request $request): JsonResponse {
-        $limit = 5;
-
-        if ($request->page) {
-            $skip = $request->page === 1 ? 0 : ($limit * $request->page) - $limit;
-        }
-
         $order = $request->sort ?? "DESC";
+        $posts = Post::skip($this->skip($request))->take($this->limit)->orderBy('title', $order)->get();
 
-        $posts = Post::skip($skip)->take($limit)->orderBy('title', $order)->get();
-        return response()->json($posts);
+        return response()->json(["posts" => $posts, "total" => Post::count()]);
     }
 
     public function filter(PostsFilter $request): JsonResponse {
-        return response()->json(Post::filter($request)->get());
+        return response()->json(["posts" => Post::filter($request)->get(), "total" => Post::filter($request)->count()]);
     }
 
     public function search(Request $request): JsonResponse {
-        return response()->json($this->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post'));
+        $total = $this
+            ->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post')
+            ->count();
+        $posts = $this
+            ->fullSearch($request->search, ['author', 'title', 'description'], 'App\Models\Post')
+            ->skip($this->skip($request))
+            ->take($this->limit)->get();
+
+        return response()
+            ->json([
+                "posts" => $posts,
+                "total" => $total,
+            ]);
     }
 
     public function getPost(Request $request): JsonResponse {
@@ -77,5 +90,13 @@ class PostController extends Controller
 
     public function delete(Request $request) {
         Post::where('id', '=', $request->id)->delete();
+    }
+
+    private function skip(Request $request): int {
+        if ($request->page) {
+            $skip = $request->page === 1 ? 0 : ($this->limit * $request->page) - $this->limit;
+        }
+
+        return $skip ?? 0;
     }
 }

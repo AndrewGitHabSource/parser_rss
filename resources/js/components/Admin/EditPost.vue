@@ -41,12 +41,12 @@
                 </template>
 
                 <el-button class="ml-3" type="success" @click="submitUpload">
-                    upload to server
+                    Upload to server
                 </el-button>
 
                 <template #tip>
                     <div class="el-upload__tip text-red">
-                        limit 1 file, new file will cover the old file
+                        Limit 1 file, new file will cover the old file
                     </div>
                 </template>
             </el-upload>

@@ -15,9 +15,9 @@ export const filterPost = async (filters) => {
     return await $http.post(route('admin.filter'), filters);
 }
 
-export const searchPost = async (search) => {
+export const searchPost = async (data) => {
     return await $http.post(route('admin.search'), {
-        search,
+        ...data
     });
 }
 

@@ -2,13 +2,13 @@
 
 namespace App\Traits;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 trait Searchable {
     private $searchWhere = false;
     private $searchWhereArray = null;
 
-    public function fullSearch(string $searchValue, array $columns, string $model, array $with = null): Collection {
+    public function fullSearch(string|null $searchValue, array $columns, string $model, array $with = null): Builder {
         if ($with) {
             $query = $model::query()->with($with);
         }
@@ -24,6 +24,6 @@ trait Searchable {
             $query->orWhere($column, 'LIKE', '%' . $searchValue . '%');
         }
 
-        return $query->get();
+        return $query;
     }
 }

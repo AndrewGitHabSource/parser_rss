@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {reactive, ref, inject} from "vue";
+import { reactive, ref, inject } from "vue";
 import { savePost } from '../../endpoints.js';
 
 export default {

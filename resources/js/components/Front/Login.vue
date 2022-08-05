@@ -16,6 +16,7 @@
         <el-form-item label="Login" prop="login">
             <el-input v-model="form.login" />
         </el-form-item>
+
         <el-form-item label="Password" prop="password">
             <el-input v-model="form.password" />
         </el-form-item>
