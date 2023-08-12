@@ -1,14 +1,19 @@
 # parser_rss
 <h2>Description</h2>
+
 <p>
     Laravel and Vue 3 are used for implementation.
 </p>
+
 <p>
     Parsing feeds from https://lifehacker.com/rss 
 </p>
+
 <p>
     and CRUD(Create, Read, Update Delete) operations in admin panel
 </p>
+
+<h2>Installation</h2>
 
 <div>
     <p>clone the project</p>
