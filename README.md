@@ -10,7 +10,7 @@
 </p>
 
 <p>
-    and CRUD(Create, Read, Update Delete) operations in admin panel
+    and CRUD(Create, Read, Update Delete), Filtering, Search operations for feeds in admin panel
 </p>
 
 <h2>Installation</h2>
