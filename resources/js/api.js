@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ZiggyVue } from 'ziggy';
-import route from 'ziggy';
+// import { ZiggyVue } from 'ziggy';
+import { route } from 'ziggy-js';
 import { Ziggy } from './ziggy';
 window.route = route;
 window.Ziggy = Ziggy;

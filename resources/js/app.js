@@ -12,8 +12,8 @@ import driverRouterVueRouter from '@websanova/vue-auth/dist/drivers/router/vue-r
 import storeData from './posts/index';
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
-import { ZiggyVue } from 'ziggy';
-import route from 'ziggy';
+import { ZiggyVue } from 'ziggy-js';
+import { route } from 'ziggy-js';
 import { Ziggy } from './ziggy';
 import { $http } from './api.js';
 
